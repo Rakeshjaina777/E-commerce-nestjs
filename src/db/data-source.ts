@@ -1,6 +1,8 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
-  import { join } from 'path';
+import { join } from 'path';
+import { UserEntity } from '../users/entities/user.entity'; // Import entity manually
+
 
 // Load environment variables
 config();
@@ -12,10 +14,10 @@ export const dataSourceOptions: DataSourceOptions = {
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'your_new_password',
   database: process.env.DB_NAME || 'bazarapi',
-  synchronize: true, // Set to false in production
+  synchronize: false, // Set to false in production
   logging: false,
-entities: [join(__dirname, '**', '*.entity.js')],  
-migrations: [join(__dirname, 'db', 'migrations', '*.js')],
+  entities: [UserEntity],
+  migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
 
   subscribers: [],
 };
