@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { UserEntity } from './entities/user.entity';
+import { UserSignInDto } from './dto/user-signin.dto';
 
 @Controller('users')
 export class UsersController {
@@ -16,18 +17,28 @@ export class UsersController {
     return { user: await this.usersService.signup(userSignUpDto) };
   }
 
+  @Post('signin')
+
+  async signin(@Body() userSignInDto: UserSignInDto) {
+
+     console.log('================'); 
+    const user = await this.usersService.signin(userSignInDto); // 🛠️ Add await
+    const accessToken = await this.usersService.accessToken(user);
+    return { accessToken, user };
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 

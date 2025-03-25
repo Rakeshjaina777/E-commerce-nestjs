@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,8 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import * as bcrypt from 'bcrypt';
+import { UserSignInDto } from './dto/user-signin.dto';
+import { sign } from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
@@ -47,16 +49,35 @@ export class UsersService {
     }
   }
 
+  async signin(userSignInDto: UserSignInDto) {
+    const userExists = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password') // Explicitly select password field
+      .where('user.email = :email', { email: userSignInDto.email })
+      .getOne();
+
+    if (
+      !userExists ||
+      !(await bcrypt.compare(userSignInDto.password, userExists.password))
+    ) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return userExists;
+  }
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return `This action returns all`;
+  async findAll(): Promise<UserEntity[]> {
+    return await this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException(`User with ID ${id} not found`);
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -65,5 +86,19 @@ export class UsersService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async accessToken(user: UserEntity) {
+    if (!process.env.ACCESS_TOKEN_SECRET_KEY) {
+      throw new Error(
+        'Missing ACCESS_TOKEN_SECRET_KEY in environment variables',
+      );
+    }
+    
+    return sign(
+      { id: user.id, email: user.email },
+      process.env.ACCESS_TOKEN_SECRET_KEY,
+      { expiresIn: '1h' },
+    );
   }
 }
