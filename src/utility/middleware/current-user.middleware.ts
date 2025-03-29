@@ -17,27 +17,51 @@ export class CurrentUserMiddleware implements NestMiddleware {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return next(); // No token, move to next middleware
+
+      req.currentUser = null;
+
+      next();
+      return;
+      
+      // No token, move to next middleware
     }
+    
 
     try {
       const token = authHeader.split(' ')[1];
 
       if (!process.env.ACCESS_TOKEN_SECRET) {
-        throw new Error('Missing ACCESS_TOKEN_SECRET in environment variables');
+        throw new Error('--------------------------------------Missing ACCESS_TOKEN_SECRET in environment variables');
       }
 
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) as {
         id: string;
+
+
       };
+ if (!decoded.id || isNaN(Number(decoded.id))) {
+   console.warn('Invalid user ID in token');
+   return next();
+ }
+
       const user = await this.userService.findOne(Number(decoded.id));
       if (user) {
+        console.log("---------------------------------------------");
+        console.log(user);
+        console.log('---------------------------------------------');console.log('🛠️ Middleware - Extracted User from Token:', user);
+        
+
         req.currentUser = user; // ✅ Now TypeScript will recognize this
       }
+   next();
+
     } catch (error) {
-      console.error('JWT Verification Error:', error);
+      console.error('-------------------------------------JWT Verification Error:', error);
+
+      req.currentUser = null;
+         next();
     }
 
-    next();
+ 
   }
 }
