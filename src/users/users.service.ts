@@ -66,9 +66,7 @@ export class UsersService {
     return userExists;
   }
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+
 
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.find();
@@ -80,25 +78,36 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const newUser = this.userRepository.create(createUserDto);
+    return await this.userRepository.save(newUser);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    await this.userRepository.update(id, updateUserDto);
+    return this.findOne(id); // Return updated user
+  }
+
+  async remove(id: number): Promise<void> {
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
   }
 
   async accessToken(user: UserEntity) {
-    if (!process.env.ACCESS_TOKEN_SECRET_KEY) {
+    if (!process.env.ACCESS_TOKEN_SECRET) {
       throw new Error(
         'Missing ACCESS_TOKEN_SECRET_KEY in environment variables',
       );
     }
-    
-    return sign(
-      { id: user.id, email: user.email },
-      process.env.ACCESS_TOKEN_SECRET_KEY,
-      { expiresIn: '1h' },
-    );
+
+  return sign(
+    { id: user.id, email: user.email },
+    process.env.ACCESS_TOKEN_SECRET,
+    // { expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRY || '3600', 10) },
+    { expiresIn: '1h' },
+  );
+
   }
 }
