@@ -5,13 +5,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserSignInDto } from './dto/user-signin.dto';
-import { CurrentUser } from '../utility/decorators/current-user-decorators';
-// import { AuthenticationGuard } from '../utility/guard/autnenication.guard';
 import { AuthorizationGuard } from '../utility/guard/authorization.guard';
-
-import { SetRoles } from '../utility/decorators/authorization-role.decorator';
-import { Roles } from '../db/migrations/user-roles.enum';
 import { AuthenticationGuard } from '../utility/guard/autnenication.guard';
+import { Roles } from '../db/migrations/user-roles.enum';
 
 @Controller('users')
 export class UsersController {
@@ -46,22 +42,7 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const userId = Number(id);
-    if (isNaN(userId)) {
-      throw new NotFoundException('Invalid user ID');
-    }
-    return this.usersService.findOne(userId);
-  }
-
-  @UseGuards(AuthenticationGuard)
-  @Get('me')
-  async getProfile(@CurrentUser() currentUser: UserEntity) {
-    console.log('Entered getProfile controller', currentUser);
-    console.log('📌 Controller - Received Current User:', currentUser);
-    if (!currentUser || !currentUser.id || isNaN(Number(currentUser.id))) {
-      throw new UnauthorizedException('Invalid or missing user ID');
-    }
-    return currentUser;
+    return this.usersService.findOne(+id);
   }
 
   @Patch(':id')

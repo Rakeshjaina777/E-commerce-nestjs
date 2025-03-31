@@ -46,15 +46,6 @@ export class CurrentUserMiddleware implements NestMiddleware {
 
       const user = await this.userService.findOne(Number(decoded.id));
       if (user) {
-        console.log("---------------------------------------------");
-        console.log(user);
-        console.log('---------------------------------------------');console.log('🛠️ Middleware - Extracted User from Token:', user);
-        
-
-        console.log('------------------🛠️ Raw user roles from DB:', user.roles);
-        console.log('===--------------🛠️ Type of roles:', typeof user.roles);
-
-
         req.currentUser = user; // ✅ Now TypeScript will recognize this
       }
    next();
