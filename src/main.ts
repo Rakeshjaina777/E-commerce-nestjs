@@ -28,11 +28,12 @@ async function bootstrap() {
   }  const reflector = app.get(Reflector); // ✅ Get Reflector from NestJS
 
   // ✅ Pass reflector to AuthorizationGuard
-  app.useGlobalGuards(
-    new AuthenticationGuard(),
-    new AuthorizationGuard(reflector),
-  );
+  // app.useGlobalGuards(
+  //   new AuthenticationGuard(),
+  //   new (AuthorizationGuard([]))(reflector),
+  // );
 
+  
  const PORT =  7501;
   await app.listen(PORT);
   console.log(`🚀 Server running on http://localhost:${PORT}`);

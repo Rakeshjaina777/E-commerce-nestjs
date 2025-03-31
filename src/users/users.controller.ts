@@ -6,11 +6,12 @@ import { UserSignUpDto } from './dto/user-signup.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserSignInDto } from './dto/user-signin.dto';
 import { CurrentUser } from '../utility/decorators/current-user-decorators';
-import { AuthenticationGuard } from '../utility/guard/autnenication.guard';
+// import { AuthenticationGuard } from '../utility/guard/autnenication.guard';
 import { AuthorizationGuard } from '../utility/guard/authorization.guard';
 
 import { SetRoles } from '../utility/decorators/authorization-role.decorator';
 import { Roles } from '../db/migrations/user-roles.enum';
+import { AuthenticationGuard } from '../utility/guard/autnenication.guard';
 
 @Controller('users')
 export class UsersController {
@@ -36,8 +37,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  @SetRoles('admin') // ✅ Restrict this route to admins only
+   @UseGuards(AuthenticationGuard, AuthorizationGuard([Roles.ADMIN]))
+  // @SetRoles('admin') // ✅ Restrict this route to admins only
   @Get('all')
   async findAll() {
     return this.usersService.findAll();
