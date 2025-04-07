@@ -45,6 +45,8 @@ var app_service_1 = require("./app.service");
 var typeorm_1 = require("@nestjs/typeorm");
 var data_source_1 = require("./db/migrations/data-source");
 // import { TestModule } from './test/test.module';
+import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 var users_module_1 = require("./users/users.module");
 var AppModule = function () {
     var _classDecorators = [(0, common_1.Module)({
