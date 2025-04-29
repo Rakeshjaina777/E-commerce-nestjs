@@ -1,4 +1,4 @@
-# 📦 E-commerce Backend
+# 📦 NestMart-Backend-NodeJS-NestJs
 
 <p align="center">
   <a href="http://nestjs.com/" target="_blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" /></a>
