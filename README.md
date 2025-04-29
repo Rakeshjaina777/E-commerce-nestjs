@@ -1,98 +1,144 @@
+# 📦 E-commerce Backend
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="_blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  A production-grade, scalable E-commerce backend built with <a href="http://nodejs.org" target="_blank">Node.js</a> and the powerful <a href="https://nestjs.com/" target="_blank">NestJS</a> framework.
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ About the Project
 
-## Project setup
+Billio is a robust E-commerce backend project demonstrating my deep expertise in **Node.js server-side development** with a focus on **clean architecture**, **scalability**, and **real-time microservices communication**.  
+It covers advanced backend engineering concepts including **caching, message queues, event-driven architecture, role-based access control, and production-grade security practices**.
+
+This project proves my ability to design and implement enterprise-ready solutions for real-world applications.
+
+---
+
+## 🚀 Technologies & Features
+
+- **NestJS** — Modular, progressive Node.js framework
+- **TypeORM** — ORM for database interaction (PostgreSQL/MySQL)
+- **Redis** — High-performance caching layer for APIs
+- **Custom Middleware** — Request/response logging, authentication validation
+- **Global Guards** — Role-based access control (RBAC) for Admin, Seller, Customer
+- **JWT Authentication** — Secure and scalable authentication system
+- **RabbitMQ** — Asynchronous communication between microservices (order, payments)
+- **Apache Kafka** — Real-time event streaming and analytics tracking
+- **Microservices Architecture** — Event-driven and scalable system design
+- **Exception Filters** — Centralized and uniform error handling
+- **Environment-Based Configuration** — Secure config management using `@nestjs/config`
+- **Swagger Integration** — API documentation and testing interface
+- **Docker-Ready Setup** — For easy production deployments
+
+---
+
+## 📦 Project Setup
 
 ```bash
+# Install all dependencies
 $ npm install
 ```
 
-## Compile and run the project
+---
+
+## 🛠 Running the Application
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
+# Start the application in development mode
 $ npm run start:dev
 
-# production mode
+# Start the application in production mode
 $ npm run start:prod
 ```
 
-## Run tests
+The application connects to Redis, RabbitMQ, Kafka, and a SQL database (PostgreSQL/MySQL).
+
+---
+
+## 🧪 Testing
 
 ```bash
-# unit tests
+# Unit tests
 $ npm run test
 
-# e2e tests
+# End-to-end (e2e) tests
 $ npm run test:e2e
 
-# test coverage
+# Code coverage
 $ npm run test:cov
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🛡️ Security and Access Control
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- **JWT Authentication** for user login and route protection
+- **Role-Based Guards** for Admin, Seller, and Customer authorization
+- **Custom Middleware** for pre-validation of requests
+- **Global Exception Handling** for error consistency
+
+---
+
+## 📡 Microservices Communication
+
+- **RabbitMQ** is used for async operations (Order processing, Payment service).
+- **Kafka** streams real-time events like product views, cart actions, and analytics.
+
+Both RabbitMQ and Kafka integrations use **NestJS Microservices Module** following industry standards.
+
+---
+
+## 🛒 Major Functionalities
+
+- **User Management** — Signup, login, profile management
+- **Product Management** — CRUD APIs for sellers/admins
+- **Shopping Cart & Checkout APIs**
+- **Order Management** — Placing, updating, tracking orders
+- **Admin APIs** — User control, product approvals
+- **Real-Time Analytics** — Powered by Kafka streaming
+
+---
+
+## ☁️ Deployment
+
+You can easily deploy the application using PM2 or Docker:
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+# Production build
+$ npm run build
+
+# Run with PM2
+$ pm2 start dist/main.js
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Or use **Docker** to containerize the app for cloud environments (AWS, Azure, DigitalOcean).
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📚 Resources
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- [NestJS Documentation](https://docs.nestjs.com)
+- [Redis Documentation](https://redis.io/docs/)
+- [RabbitMQ Documentation](https://www.rabbitmq.com/)
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
+- [TypeORM Documentation](https://typeorm.io/)
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 📈 My Backend Development Expertise
 
-## Stay in touch
+This project highlights my ability to:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Architect and build **modular, scalable backend systems**.
+- Implement **highly available microservices** with **RabbitMQ** and **Kafka**.
+- Integrate **Redis caching** to boost performance.
+- Apply **security best practices** (Authentication, RBAC, Exception handling).
+- Manage backend projects with **clean code principles** and **production-readiness**.
+- Solve complex backend challenges and optimize systems for real-world use.
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
