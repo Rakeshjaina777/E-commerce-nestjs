@@ -12,7 +12,7 @@
 
 ## ✨ About the Project
 
-Billio is a robust E-commerce backend project demonstrating my deep expertise in **Node.js server-side development** with a focus on **clean architecture**, **scalability**, and **real-time microservices communication**.  
+NestMart is a robust E-commerce backend project demonstrating my deep expertise in **Node.js server-side development** with a focus on **clean architecture**, **scalability**, and **real-time microservices communication**.  
 It covers advanced backend engineering concepts including **caching, message queues, event-driven architecture, role-based access control, and production-grade security practices**.
 
 This project proves my ability to design and implement enterprise-ready solutions for real-world applications.
