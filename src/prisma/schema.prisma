@@ -1,0 +1,112 @@
+
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+  MANAGER
+  CASHIER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  CANCELLED
+  OVERDUE
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  UPI
+  BANK_TRANSFER
+  PAYPAL
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  fullName  String
+  role      Role     @default(USER)
+  shopId    String?  // optional if user not tied to a shop
+  shop      Shop?    @relation(fields: [shopId], references: [id])
+  invoices  Invoice[]
+  payments  Payment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Shop {
+  id        String    @id @default(uuid())
+  name      String
+  ownerId   String
+  owner     User      @relation(fields: [ownerId], references: [id])
+  invoices  Invoice[]
+  items     Item[]
+  staff     User[]    @relation("ShopStaff")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Invoice {
+  id           String         @id @default(uuid())
+  code         String         @unique
+  customerName String
+  totalAmount  Float
+  status       InvoiceStatus  @default(DRAFT)
+  shopId       String
+  createdById  String
+  shop         Shop           @relation(fields: [shopId], references: [id])
+  createdBy    User           @relation(fields: [createdById], references: [id])
+  items        InvoiceItem[]
+  payments     Payment[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Item {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  quantity    Int
+  shopId      String
+  shop        Shop      @relation(fields: [shopId], references: [id])
+  invoiceItems InvoiceItem[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model InvoiceItem {
+  id         String   @id @default(uuid())
+  invoiceId  String
+  itemId     String
+  quantity   Int
+  price      Float
+  invoice    Invoice  @relation(fields: [invoiceId], references: [id])
+  item       Item     @relation(fields: [itemId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Payment {
+  id          String         @id @default(uuid())
+  amount      Float
+  method      PaymentMethod
+  invoiceId   String
+  userId      String
+  invoice     Invoice        @relation(fields: [invoiceId], references: [id])
+  user        User           @relation(fields: [userId], references: [id])
+  paidAt      DateTime       @default(now())
+  createdAt   DateTime       @default(now())
+}
