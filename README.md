@@ -1,144 +1,211 @@
-# 📦 NestMart-Backend-NodeJS-NestJs
+# 🧠 NestMart Backend – NestJS + PostgreSQL + Prisma
 
-<p align="center">
-  <a href="http://nestjs.com/" target="_blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" /></a>
-</p>
-
-<p align="center">
-  A production-grade, scalable E-commerce backend built with <a href="http://nodejs.org" target="_blank">Node.js</a> and the powerful <a href="https://nestjs.com/" target="_blank">NestJS</a> framework.
-</p>
+A production-ready, modular, and scalable backend for a modern e-commerce platform. Built with **NestJS**, **PostgreSQL**, and **Prisma ORM**, it supports authentication, RBAC, product and order management, and real-time microservice communication with RabbitMQ and Kafka.
 
 ---
 
-## ✨ About the Project
+## 🚀 Tech Stack
 
-NestMart is a robust E-commerce backend project demonstrating my deep expertise in **Node.js server-side development** with a focus on **clean architecture**, **scalability**, and **real-time microservices communication**.  
-It covers advanced backend engineering concepts including **caching, message queues, event-driven architecture, role-based access control, and production-grade security practices**.
-
-This project proves my ability to design and implement enterprise-ready solutions for real-world applications.
-
----
-
-## 🚀 Technologies & Features
-
-- **NestJS** — Modular, progressive Node.js framework
-- **TypeORM** — ORM for database interaction (PostgreSQL/MySQL)
-- **Redis** — High-performance caching layer for APIs
-- **Custom Middleware** — Request/response logging, authentication validation
-- **Global Guards** — Role-based access control (RBAC) for Admin, Seller, Customer
-- **JWT Authentication** — Secure and scalable authentication system
-- **RabbitMQ** — Asynchronous communication between microservices (order, payments)
-- **Apache Kafka** — Real-time event streaming and analytics tracking
-- **Microservices Architecture** — Event-driven and scalable system design
-- **Exception Filters** — Centralized and uniform error handling
-- **Environment-Based Configuration** — Secure config management using `@nestjs/config`
-- **Swagger Integration** — API documentation and testing interface
-- **Docker-Ready Setup** — For easy production deployments
+| Layer            | Tool                             |
+| ---------------- | -------------------------------- |
+| Backend          | [NestJS](https://nestjs.com/)    |
+| ORM              | [Prisma](https://www.prisma.io/) |
+| Database         | PostgreSQL                       |
+| Auth/Guard       | JWT + RolesGuard                 |
+| Message Queue    | RabbitMQ, Kafka                  |
+| API Docs         | Swagger + OpenAPI                |
+| Caching          | Redis                            |
+| Containerization | Docker + Docker Compose          |
 
 ---
 
-## 📦 Project Setup
+## 🛠️ Local Installation
 
 ```bash
-# Install all dependencies
-$ npm install
+# Clone the repository
+git clone https://github.com/your-org/nestmart-backend.git
+cd nestmart-backend
+
+# Install dependencies
+npm install
+
+# Create environment config
+cp .env.example .env
+
+# Start local PostgreSQL if not using Docker
+docker run -d --name nestmart-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres
+
+# Migrate the database schema
+npx prisma migrate dev --name init
+
+# Optional: Seed test data
+npm run seed
+
+# Start the dev server
+npm run start:dev
 ```
 
 ---
 
-## 🛠 Running the Application
+## 🐳 Docker Setup
 
 ```bash
-# Start the application in development mode
-$ npm run start:dev
-
-# Start the application in production mode
-$ npm run start:prod
+# Build and run backend + DB using docker-compose
+docker-compose up --build
 ```
 
-The application connects to Redis, RabbitMQ, Kafka, and a SQL database (PostgreSQL/MySQL).
+* Backend: [http://localhost:3000](http://localhost:3000)
+* Swagger Docs: [http://localhost:3000/api](http://localhost:3000/api)
+* PostgreSQL: exposed on port 5432
 
 ---
 
-## 🧪 Testing
+## 📁 Folder Structure
 
-```bash
-# Unit tests
-$ npm run test
-
-# End-to-end (e2e) tests
-$ npm run test:e2e
-
-# Code coverage
-$ npm run test:cov
+```
+src/
+├── common/            # DTOs, enums, guards, middleware, filters, utils
+├── modules/           # Modular features (auth, user, product, order)
+├── prisma/            # Prisma schema, seed, and client
+├── config/            # App and env config
+├── core/              # Swagger, logger setup
+├── main.ts            # App bootstrap
 ```
 
 ---
 
-## 🛡️ Security and Access Control
+## 🧠 Prisma Schema & Relationships
 
-- **JWT Authentication** for user login and route protection
-- **Role-Based Guards** for Admin, Seller, and Customer authorization
-- **Custom Middleware** for pre-validation of requests
-- **Global Exception Handling** for error consistency
+```prisma
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role
+  products  Product[]
+  orders    Order[]
+}
 
----
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  stock       Int
+  categoryId  String
+  sellerId    String
+  seller      User     @relation(fields: [sellerId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+}
 
-## 📡 Microservices Communication
+model Order {
+  id       String       @id @default(uuid())
+  userId   String
+  user     User         @relation(fields: [userId], references: [id])
+  items    OrderItem[]
+  createdAt DateTime    @default(now())
+}
 
-- **RabbitMQ** is used for async operations (Order processing, Payment service).
-- **Kafka** streams real-time events like product views, cart actions, and analytics.
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+}
 
-Both RabbitMQ and Kafka integrations use **NestJS Microservices Module** following industry standards.
-
----
-
-## 🛒 Major Functionalities
-
-- **User Management** — Signup, login, profile management
-- **Product Management** — CRUD APIs for sellers/admins
-- **Shopping Cart & Checkout APIs**
-- **Order Management** — Placing, updating, tracking orders
-- **Admin APIs** — User control, product approvals
-- **Real-Time Analytics** — Powered by Kafka streaming
-
----
-
-## ☁️ Deployment
-
-You can easily deploy the application using PM2 or Docker:
-
-```bash
-# Production build
-$ npm run build
-
-# Run with PM2
-$ pm2 start dist/main.js
+enum Role {
+  ADMIN
+  SELLER
+  CUSTOMER
+}
 ```
 
-Or use **Docker** to containerize the app for cloud environments (AWS, Azure, DigitalOcean).
+---
+
+## 🌐 API Documentation (Swagger)
+
+Available at: **[http://localhost:3000/api](http://localhost:3000/api)**
 
 ---
 
-## 📚 Resources
+## 🔮 Sample API Usage
 
-- [NestJS Documentation](https://docs.nestjs.com)
-- [Redis Documentation](https://redis.io/docs/)
-- [RabbitMQ Documentation](https://www.rabbitmq.com/)
-- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
-- [TypeORM Documentation](https://typeorm.io/)
+### `POST /auth/signup`
+
+```json
+{
+  "email": "user@mail.com",
+  "password": "securepass",
+  "role": "CUSTOMER"
+}
+```
+
+### `POST /products`
+
+Requires seller/admin token.
+
+```json
+{
+  "name": "Macbook Pro",
+  "description": "2024 M3 chip",
+  "price": 2499.99,
+  "stock": 10,
+  "categoryId": "uuid-category"
+}
+```
+
+### `POST /orders`
+
+```json
+{
+  "items": [
+    { "productId": "uuid-product", "quantity": 1 }
+  ]
+}
+```
 
 ---
 
-## 📈 My Backend Development Expertise
+## 🪤 Environment Variables
 
-This project highlights my ability to:
-
-- Architect and build **modular, scalable backend systems**.
-- Implement **highly available microservices** with **RabbitMQ** and **Kafka**.
-- Integrate **Redis caching** to boost performance.
-- Apply **security best practices** (Authentication, RBAC, Exception handling).
-- Manage backend projects with **clean code principles** and **production-readiness**.
-- Solve complex backend challenges and optimize systems for real-world use.
+| Key            | Example                                    | Description               |
+| -------------- | ------------------------------------------ | ------------------------- |
+| `DATABASE_URL` | `postgresql://postgres:postgres@localhost` | Prisma DB URL             |
+| `PORT`         | `3000`                                     | App port                  |
+| `JWT_SECRET`   | `supersecurekey`                           | JWT signing key           |
+| `REDIS_URL`    | `redis://localhost:6379`                   | Redis for caching         |
+| `RABBITMQ_URL` | `amqp://localhost:5672`                    | RabbitMQ for queues       |
+| `KAFKA_BROKER` | `localhost:9092`                           | Kafka for event streaming |
 
 ---
+
+## 🛡 Security Features
+
+* ✅ Helmet-based HTTP headers
+* ✅ CORS configuration
+* ✅ Global DTO validation
+* ✅ Role-based route guards
+* ✅ JWT-secured endpoints
+* ✅ Global exception handling
+* ✅ Logging & Interceptors
+
+---
+
+## 🧰 Future Enhancements
+
+* **🔒 Advanced RBAC** with dynamic permissions and claims
+* **⏰ Cron Jobs + Redis** for analytics/report caching
+* **⚙️ BullMQ + Redis** for background processing
+* **📱 Real-time Order Tracking** via WebSockets
+* **📊 Admin Dashboard Export** with PDF support
+* **🏢 SaaS Multi-Tenancy** support for vendor segregation
+
+---
+
+## 👨‍💻 Author & Maintainer
+
+* 👤 **Author**: Rakesh Jain
+* 💼 **LinkedIn**: [https://www.linkedin.com/in/your-link/](https://www.linkedin.com/in/rakesh-jain-b93b28223/)
+* 🛠 Stack: NestJS · PostgreSQL · Prisma · Swagger · Redis · Kafka · RabbitMQ · Docker
